@@ -1,5 +1,16 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Вся моя жизнь</title>
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAF1F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1D1418" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="РњРѕСЏ Р¶РёР·РЅСЊ">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-tap-highlight-color:transparent}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>if("serviceWorker" in navigator&&location.protocol==="https:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script><title>Вся моя жизнь</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -323,6 +334,18 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:.8rem;font-weight:7
   .fab span{display:none}
   .fab{padding:14px}
 }
+.tabbar{display:none}
+@media (max-width:860px){
+  .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:35;background:var(--surface);border-top:1px solid var(--line);
+    padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));box-shadow:0 -10px 30px -24px rgba(0,0,0,.35)}
+  .tabbar a,.tabbar button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border:0;background:none;color:var(--muted);text-decoration:none;font-size:.66rem;font-weight:700;border-radius:12px;position:relative;min-width:0}
+  .tabbar a.on{color:var(--accent-deep);background:var(--soft)}
+  .tabbar svg.i{width:22px;height:22px}
+  .tabbar .cnt{position:absolute;top:2px;left:calc(50% + 6px);font-size:.6rem;min-width:16px;padding:0 4px;border-radius:99px;background:var(--accent-deep);color:var(--on-accent);line-height:16px}
+  .fab{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+}
 .day .dots{display:none}
 .day .dots i{width:6px;height:6px;border-radius:50%;background:var(--c)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -345,6 +368,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:.8rem;font-weight:7
     <div id="view"></div>
   </main>
 </div>
+<nav class="tabbar" id="tabbar" aria-label="Быстрые разделы"></nav>
 <div class="scrim" id="scrim" hidden></div>
 
 <button class="btn fab" id="fab" aria-label="Открыть ИИ-помощника"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/></svg><span>ИИ-помощник</span></button>
@@ -414,6 +438,7 @@ const P = {
   check:'<path d="M5 12l5 5L20 7"/>',
   left:'<path d="M15 18l-6-6 6-6"/>', right:'<path d="M9 18l6-6-6-6"/>',
   x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
   water:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
   book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5zM19 19v2H6"/>',
   leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15M5 19l7-7"/>',
@@ -995,6 +1020,9 @@ function renderNav() {
   $("#nav").innerHTML = NAV.map(([k, n, icn]) => `<a href="#${k}" class="${r === k ? "on" : ""}" ${r === k ? 'aria-current="page"' : ""}>${ic(icn)}${n}${k === "day" && todayOpen ? `<span class="cnt">${todayOpen}</span>` : ""}${k === "work" && workOd ? `<span class="cnt crit" title="Просрочено">${workOd}</span>` : ""}</a>`).join("")
     + `<div class="nav-sep"></div><button data-act="ai-open">${ic("sparkle")}ИИ-помощник</button><a href="#profile" class="${r === "profile" ? "on" : ""}">${ic("user")}Профиль</a>`;
   const cur = NAV.find(n => n[0] === r); $("#topTitle").textContent = cur ? cur[1] : "Профиль";
+  const TABS = [["day", "Мой день", "day"], ["calendar", "Календарь", "calendar"], ["habits", "Привычки", "repeat"], ["finance", "Финансы", "wallet"]];
+  $("#tabbar").innerHTML = TABS.map(([k, n, icn]) => `<a href="#${k}" class="${r === k ? "on" : ""}" ${r === k ? 'aria-current="page"' : ""}>${ic(icn)}<span>${n}</span>${k === "day" && todayOpen ? `<span class="cnt">${todayOpen}</span>` : ""}</a>`).join("")
+    + `<button type="button" id="tabMore" aria-label="Все разделы">${ic("menu")}<span>Ещё</span></button>`;
 }
 function render() {
   gid = 0;
@@ -1206,7 +1234,9 @@ document.addEventListener("keydown", e => {
 });
 const side = $("#side"), scrim = $("#scrim");
 function closeSide() { side.classList.remove("open"); scrim.hidden = true; }
-$("#menuBtn").addEventListener("click", () => { side.classList.add("open"); scrim.hidden = false; side.querySelector("a")?.focus(); });
+const openSide = () => { side.classList.add("open"); scrim.hidden = false; side.querySelector("a")?.focus(); };
+$("#menuBtn").addEventListener("click", openSide);
+$("#tabbar").addEventListener("click", e => { if (e.target.closest("#tabMore")) openSide(); });
 scrim.addEventListener("click", () => { closeSide(); closeAI(); });
 
 /* ---------- Markdown (tiny, escaped) ---------- */
