@@ -1,0 +1,22 @@
+{
+  "name": "Вся моя жизнь",
+  "short_name": "Моя жизнь",
+  "description": "Планы, привычки, цели, здоровье и финансы в одном месте",
+  "lang": "ru",
+  "start_url": "./#day",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF1F1",
+  "theme_color": "#FAF1F1",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Мой день", "url": "./#day", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Привычки", "url": "./#habits", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Финансы", "url": "./#finance", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
